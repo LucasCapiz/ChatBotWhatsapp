@@ -9,6 +9,8 @@ En este ejemplo se muestra el flujo conversacional de una empresa de reparación
 - Si se mojó o no
 - Número de celular
 
+O se rellena el problema de manera manual.
+
 Se implementó con Python, Node JS y Mysql.
 
 Todo esto esta alojado en mi VPS, actualmente utilizo Ubuntu 22.04 y Nginx.
