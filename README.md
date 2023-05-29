@@ -18,6 +18,8 @@ Todo esto esta alojado en mi VPS, actualmente utilizo Ubuntu 22.04 y Nginx.
 
 
 
-* Si no tiene que ver con la imagen o el tactil, no nos influye si se mojó o se golpeó por lo que se rellena con "Sin especificar"
+* Si no tiene que ver con la imagen o el tactil, no nos influye si se mojó o se golpeó por lo que se rellena con "Sin especificar"...
+
+
 ![image](https://github.com/LucasCapiz/ChatBotWhatsapp/assets/103195322/91a733f7-ef5e-4d7b-9f56-7f372bb502c2)
 
