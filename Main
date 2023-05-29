@@ -1,0 +1,312 @@
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+
+const {
+    createBot,
+    createProvider,
+    createFlow,
+    addKeyword,
+    addAnswer,
+} = require('@bot-whatsapp/bot')
+
+const fs = require('fs');
+const RESPONSES_SHEET_ID = 'ID'; //Aquí pondras el ID de tu hoja de Sheets
+const doc = new GoogleSpreadsheet(RESPONSES_SHEET_ID);
+const CREDENTIALS = JSON.parse(fs.readFileSync('./credenciales.json'));
+
+const MetaProvider = require('@bot-whatsapp/provider/meta')  // Conjunto de datos del proveedor
+const MySQLAdapter = require('@bot-whatsapp/database/mysql') // Conjunto de datos de la base de datos
+
+/*                       Para añadir o eliminar alguna pregunta sigue los siguientes pasos:
+1) ➡️ Crea el addAnswer
+2) ➡️ Crea la variable del STATUS
+3) ➡️ Añade el nombre de la columna de Sheets junto con su variable
+                      */
+
+let STATUS = {}
+
+
+const flowHola = addKeyword(['iphone', 'samsung', 'xiaomi', 'lenovo', 'motorola', 'huawei', 'sony', 'google pixel', 'lg']).addAnswer('Y por último te pido que completes tus datos:')
+
+    .addAnswer(
+        'Dime tu nombre',
+        { capture: true },
+
+        async (ctx, { flowDynamic }) => {
+
+
+            telefono = ctx.from
+            nombre = STATUS[telefono] = { ...STATUS[telefono], nombre: ctx.body }                //➡️ Variable del STATUS
+            telefono = STATUS[telefono] = { ...STATUS[telefono], telefono: ctx.from }        // Variable del STATUS
+            // Ejemplo // NOMBRE VARIABLE = TATUS[telefono], NOMBRE VARIABLE : ctx.body
+
+
+
+
+            flowDynamic()
+        })
+
+
+    .addAnswer(
+        'Dime tus apellidos',
+        { capture: true },
+        async (ctx, { flowDynamic }) => {
+
+
+            telefono = ctx.from
+            apellidos = STATUS[telefono] = { ...STATUS[telefono], apellidos: ctx.body }
+
+
+            ingresarDatos();
+            async function ingresarDatos() {
+                console.log(STATUS[telefono].nombre)
+                let rows = [{
+                
+                    Nombre: STATUS[telefono].nombre,
+                    Apellidos: STATUS[telefono].apellidos,
+                    Modelo: STATUS[telefono].modelo,
+                    Problema: STATUS[telefono].problema,
+                    Mojado: STATUS[telefono].mojado,
+                    Golpeado: STATUS[telefono].golpeado,
+                    Telefono: STATUS[telefono].telefono,
+
+                }];
+
+                await doc.useServiceAccountAuth({
+                    client_email: CREDENTIALS.client_email,
+                    private_key: CREDENTIALS.private_key
+                });
+                await doc.loadInfo();
+                let sheet = doc.sheetsByIndex[0];
+                for (let index = 0; index < rows.length; index++) {
+                    const row = rows[index];
+                    await sheet.addRow(row);
+                }
+            }
+        });
+
+
+
+const flowMarca = addKeyword(['Si 💦', 'No ❌', 'Astillada', 'Verde / Blanca', 'chip', 'sim', 'cable', 'pin', 'sucio', 'boton', 'botones', 'id', 'face', 'lector', 'camara', 'zoom', 'audio', 'microfono', 'altavoz', 'altavoces', 'sonido', 'Sensor', 'Vibración', 'Vibracion', 'Sobrecalentamiento', 'Pantalla', 'Pin', 'Conector', 'USB', 'Adaptador', 'Cable', 'encendido', 'Boton', 'volumen', 'Altavoz', 'Micrófono', 'Microfono', 'Auriculares', 'Auricular', 'Jack de audio', 'audio', 'Bluetooth', 'WiFi', 'SIM', 'Tarjeta', 'memoria', 'Cámara', 'Camara', 'Flash', 'GPS', 'Touchscreen', 'sistema', 'Reinicio', 'Restauración', 'Actualización', 'software', 'Falla'])
+
+    //35 caracteres por renglon
+    .addAnswer('Entonces, dime ¿Qué modelo de celular tienes? 💬 :\n\nEjemplo: *Samsung* Galaxy J7',
+
+        { capture: true },
+        async (ctx, { flowDynamic }) => {
+
+            telefono = ctx.from
+            modelo = STATUS[telefono] = { ...STATUS[telefono], modelo: ctx.body }
+
+            flowDynamic()
+        })
+
+
+const flowProblema = addKeyword(['Electrónica', 'Carga / Bateria 🔋'])
+
+
+    .addAnswer('Estoy aquí para escucharte y ofrecerte la mejor solución posible 💪\n\n¡Adelante! 👂🏽 Cuéntame más detalles sobre el inconveniente que estás experimentando!',
+
+        { capture: true },
+        async (ctx, { flowDynamic }) => {
+
+            telefono = ctx.from
+            problema = STATUS[telefono] = { ...STATUS[telefono], problema: ctx.body }
+            mojado = STATUS[telefono] = { ...STATUS[telefono], mojado: 'Sin especificar' }
+            golpeado = STATUS[telefono] = { ...STATUS[telefono], golpeado: 'Sin especificar' }
+
+            flowDynamic()
+        }, [flowMarca])
+
+
+const flowMojado = addKeyword(['Si 💥', 'No ⛔'])
+
+    .addAnswer(
+        '¡Vaya! Lamento escuchar eso. 😔\n\n¿Por casualidad, tu celular se ha mojado recientemente? 🌊💦',
+        {
+            capture: true,
+            buttons:
+                [{ body: 'Si 💦' }, { body: 'No ❌' }]
+        },
+        async (ctx, { flowDynamic }) => {
+
+            telefono = ctx.from
+            mojado = STATUS[telefono] = { ...STATUS[telefono], mojado: ctx.body }
+
+
+            flowDynamic()
+        }, [flowMarca])
+
+
+const flowGolpe = addKeyword(['Tactil mal', 'Sin imagen', 'Imagen c/detalles'])
+
+    .addAnswer(
+        'Oh, qué pena escuchar eso. 😔\n\n¿Hace poco tu celular ha sufrido algún golpe o impacto? Esto nos ayudará a entender mejor la situación y brindarte la mejor solución posible.',
+        {
+            capture: true,
+            buttons:
+                [{ body: 'Si 💥' }, { body: 'No ⛔' }]
+        },
+        async (ctx, { flowDynamic }) => {
+
+
+            telefono = ctx.from
+            golpeado = STATUS[telefono] = { ...STATUS[telefono], golpeado: ctx.body }
+
+
+            flowDynamic()
+        }, [flowMojado])
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////      FIN OTRAS        //////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+
+const flowMatias = addKeyword('Hablar con Juan📞')
+
+    //35 caracteres por renglon
+    .addAnswer('Si 😊 Aguardame un segundo que le aviso!')
+
+
+const flowTienda = addKeyword('Tienda 🔗')
+
+    //35 caracteres por renglon
+    .addAnswer(['Visita nuestra página web para obtener información detallada sobre nuestra empresa, servicios y mucho más.\n\nSolo tienes que hacer clic en el siguiente enlace: ', 'https://instagram.com', '¡Descubre todo lo que tenemos para ofrecerte! 🔧📱'])
+
+
+const flowCursos = addKeyword('Cursos 📚')
+
+    //35 caracteres por renglon
+    .addAnswer('¡Tenemos varios cursos y capacitaciones disponibles para empresas 💼 ! Tanto en formato online como presencial. Además, ¡te mantendremos informado sobre los próximos congresos en México 🇲🇽 y Uruguay 🇺🇾! 🎓🌟\n\n¡No dudes en explorar nuestras opciones y descubrir cómo podemos impulsar tu crecimiento!')
+
+//////////////////////////////////////////////////////////////////////      FIN PANTALLA        //////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+const flowPantalla = addKeyword('Pantalla')
+
+    .addAnswer(
+        '¡Gracias por la información! 😊\nParece que la falla está relacionada con la pantalla, contame como esta: 📱👆:',
+        {
+            capture: true,
+            buttons:
+                [{ body: 'Astillada' }, { body: 'Verde / Blanca' }]
+        },
+        async (ctx, { flowDynamic }) => {
+
+
+            telefono = ctx.from
+            problema = STATUS[telefono] = { ...STATUS[telefono], problema: ctx.body }
+            mojado = STATUS[telefono] = { ...STATUS[telefono], mojado: 'Sin especificar' }
+            golpeado = STATUS[telefono] = { ...STATUS[telefono], golpeado: 'Sin especificar' }        
+            telefono = STATUS[telefono] = { ...STATUS[telefono], telefono: ctx.from } 
+
+
+            flowDynamic()
+        }, [flowMarca])
+
+
+    .addAnswer('Si la falla no corresponde con ninguna de las opciones anteriores, no te preocupes.\n\n¡Simplemente escribe *otros*! Estoy aquí para escuchar y resolver cualquier problema que puedas tener. 😊💬', { delay: 700 })
+
+
+const flowImagen = addKeyword('Imagen / Táctil')
+
+    .addAnswer(
+        '¡Gracias por la información! 😊\nParece que la falla está relacionada con la imagen o el táctil, contame como esta: 📱👆:',
+        {
+            capture: true,
+            buttons:
+                [{ body: 'Sin imagen' }, { body: 'Imagen c/detalles' }, { body: 'Tactil mal' }]
+        },
+        async (ctx, { flowDynamic }) => {
+
+
+            telefono = ctx.from
+            problema = STATUS[telefono] = { ...STATUS[telefono], problema: ctx.body }
+      
+            flowDynamic()
+        }, [flowGolpe])
+
+
+    .addAnswer('Si la falla no corresponde con ninguna de las opciones anteriores, no te preocupes.\n\n¡Simplemente escribe *otros*! Estoy aquí para escuchar y resolver cualquier problema que puedas tener. 😊💬', { delay: 500 })
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////      FIN MICELULAR        //////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+
+const flowEstadoReparacion = addKeyword('Estado reparacion').addAnswer(['Entiendo, para ver el estado de tu reparación precisas poner el código que te dimos en el siguiente link 🔗 ', 'https://ticketservice.xyz'])
+
+
+const flowDañado = addKeyword('Celular dañado')
+
+    //35 caracteres por renglon
+    .addAnswer('¡Entendido! 😊 Haré todo lo posible para resolverlo rápidamente. Pero antes, ¿Podrías decirme en qué área está el problema?', null, { delay: 1000 })
+    //35 caracteres por renglon
+    .addAnswer('¿Está relacionado con la pantalla y el táctil 📱👆, o con la parte electrónica? ⚡🔌', {
+        buttons: [{ body: 'Pantalla' }, { body: 'Imagen / Táctil' }, { body: 'Electrónica' }],
+    }, { delay: 1000 }, [flowPantalla, flowProblema, flowImagen])
+
+
+
+
+//////////////////////////////////////////////////////////////////////      FIN PRINCIPALES        //////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+
+const flowOtra = addKeyword('Otra')
+
+    //35 caracteres por renglon
+    .addAnswer('¡Genial! 😊 Tenemos una amplia variedad de cursos y congresos disponibles para ti. 💬✨\n\n🎓🏢 Nuestro objetivo es brindarte capacitación de calidad, ya sea en línea o de forma presencial. Además, también ofrecemos servicios de capacitación a empresas para satisfacer sus necesidades específicas.\n\n¡No dudes en explorar nuestras opciones y descubrir cómo podemos ayudarte a crecer y desarrollarte! 🚀', {
+        buttons: [{ body: 'Cursos 📚' }, { body: 'Tienda 🔗' }, { body: 'Hablar con Juan📞' }],
+    }, null, [flowCursos, flowTienda, flowJuan])
+
+const flowMicelular = addKeyword('Mi celular')
+
+    //35 caracteres por renglon
+    .addAnswer('Oh no! Lamento escuchar que estás teniendo problemas con tu celular. No te preocupes, ¡Estoy aquí para ayudarte! 💪\n\nCon respecto a tu celular, te puedo ayudar con 💬:', {
+        buttons: [{ body: 'Celular dañado 📱' }, { body: 'Estado reparacion 🔧' }, { body: 'Carga / Bateria 🔋' }],
+    }, null, [flowEstadoReparacion, flowDañado, flowProblema])
+
+
+//////////////////////////////////////////////////////////////////////      FIN BIENVENIDA        //////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+
+
+const flowPrincipal = addKeyword('hola')
+
+    //35 caracteres por renglon
+    .addAnswer('Hola! 👋 Bienvenido a ReparaciónDeCelulares 📱\n\nTu lugar de confianza para resolver los problemas de tu celular.\n\n📍 Estamos ubicados en xxx, Local xx.\n\n🕚 Nuestro horario de atención es de 10 a 22hs, de Lunes a Sábado.\n\n😊💼¿En qué tipo de consulta puedo ayudarte hoy? \n💬 No dudes en compartir tus inquietudes y juntos encontraremos la mejor solución para tu dispositivo.\n\n¡Estamos aquí para asistirte!', {
+        buttons: [{ body: 'Mi celular' }, { body: 'Otra' }],
+    }, null, [flowMicelular, flowOtra])
+
+
+
+const main = async () => {
+
+    // Nos conectamos a Mysql
+    const adapterDB = new MySQLAdapter({
+        host: 'HostBaseDeDatos',
+        user: 'UsuarioBaseDeDatos',
+        database: 'NombreBaseDeDatos',
+        password: 'ContraseñaBaseDeDatos',
+        port: '3306', // Puerto para conexiones MYSQL
+    })
+
+    const adapterFlow = createFlow([flowPrincipal, flowMicelular, flowOtra, flowDañado, flowEstadoReparacion, flowPantalla, flowCursos, flowTienda, flowGolpe, flowMojado, flowJuan, flowMarca, flowProblema, flowHola, flowImagen])
+    const adapterProvider = createProvider(MetaProvider, {
+        jwtToken: 'TokenDeMeta',
+        numberId: 'IdentificadorNumeroDeMeta',
+        verifyToken: 'TokenDeUsuario',
+        version: 'v16.0'
+    })
+
+    createBot({
+        flow: adapterFlow,
+        provider: adapterProvider,
+        database: adapterDB,
+    })
+
+}
+
+main()
