@@ -12,7 +12,7 @@ En este ejemplo se muestra de manera parcial la creación de un flujo conversaci
 - Si envía el celular o lo acerca
 - Número de teléfono desde donde escribe
 
-+ Estos datos se ingresan de manera manual
+ + Estos datos se ingresan de manera manual
 
 Los otros datos se aplican a partir de opciones numéricas, si el cliente escribe una opción distinta se escribe el texto literal del cliente.
 
