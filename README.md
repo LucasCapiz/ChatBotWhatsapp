@@ -11,7 +11,7 @@ Tecnologías utilizadas: El bot se desarrolló utilizando Python, Node.js y MySQ
 
 Alojamiento en VPS: El bot está alojado en un VPS con Ubuntu 22.04 como sistema operativo y Nginx como servidor web. Esto garantiza un entorno seguro y confiable para el funcionamiento del bot.
 
-Requisitos técnicos
+# Requisitos técnicos
 Para comprender y ejecutar este proyecto, es necesario tener conocimientos básicos en los siguientes aspectos:
 
 Python: Familiaridad con la programación en Python para comprender y modificar la lógica del chatbot.
