@@ -2,7 +2,7 @@
 
 Este es un ejemplo de un chatbot de WhatsApp diseñado para una empresa ficticia de reparación de celulares. El bot utiliza respuestas automatizadas para interactuar con los clientes y proporcionar información sobre el servicio ofrecido. Además, se almacenan datos relevantes en un Google Sheets para mejorar la eficiencia y el seguimiento del trabajo de la empresa.
 
-Características principales
+# Características principales
 Respuestas automatizadas: El chatbot está programado para responder automáticamente a diferentes consultas de los clientes. Utiliza un flujo conversacional basado en opciones numéricas para facilitar la interacción.
 
 Almacenamiento de datos: Se guardan datos importantes en un Google Sheets para un registro organizado y eficiente. Los datos incluyen información del cliente, como el nombre, marca y modelo del celular, problema reportado, localidad del cliente, opción de envío y número de teléfono.
