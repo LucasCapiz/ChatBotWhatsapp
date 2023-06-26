@@ -1,25 +1,26 @@
-# ChatBotWhatsapp
+# Chatbot de WhatsApp
 
-Consta de un bot de whatsapp que contiene respuestas automatizadas antes distintas respuestas del cliente.
+Este es un ejemplo de un chatbot de WhatsApp diseñado para una empresa ficticia de reparación de celulares. El bot utiliza respuestas automatizadas para interactuar con los clientes y proporcionar información sobre el servicio ofrecido. Además, se almacenan datos relevantes en un Google Sheets para mejorar la eficiencia y el seguimiento del trabajo de la empresa.
 
-En este ejemplo se muestra de manera parcial la creación de un flujo conversacional de una empresa de reparación de celulares ficticia, se utiliza el uso de números para elegir las opciones de los clientes, además se guardan datos importantes en un GoogleSheets para la compresión y eficiencia del trabajo para la empresa como pueden ser:
+Características principales
+Respuestas automatizadas: El chatbot está programado para responder automáticamente a diferentes consultas de los clientes. Utiliza un flujo conversacional basado en opciones numéricas para facilitar la interacción.
 
-- Nombre y apellido *
-- Marca
-- Modelo *
-- Problema
-- Si vive o no en Buenos Aires
-- Si envía el celular o lo acerca
-- Número de teléfono desde donde escribe
+Almacenamiento de datos: Se guardan datos importantes en un Google Sheets para un registro organizado y eficiente. Los datos incluyen información del cliente, como el nombre, marca y modelo del celular, problema reportado, localidad del cliente, opción de envío y número de teléfono.
 
-. Estos datos se ingresan de manera manual
+Tecnologías utilizadas: El bot se desarrolló utilizando Python, Node.js y MySQL. Python se encarga de la lógica de conversación y almacenamiento de datos, Node.js se utiliza para conectar el bot con la API de WhatsApp, y MySQL se utiliza para gestionar la base de datos.
 
-Los otros datos se aplican a partir de opciones numéricas, si el cliente escribe una opción distinta se escribe el texto literal del cliente.
+Alojamiento en VPS: El bot está alojado en un VPS con Ubuntu 22.04 como sistema operativo y Nginx como servidor web. Esto garantiza un entorno seguro y confiable para el funcionamiento del bot.
 
+Requisitos técnicos
+Para comprender y ejecutar este proyecto, es necesario tener conocimientos básicos en los siguientes aspectos:
 
-Se implementó con Python, Node JS y Mysql.
+Python: Familiaridad con la programación en Python para comprender y modificar la lógica del chatbot.
 
-Todo esto esta alojado en mi VPS, actualmente utilizo Ubuntu 22.04 y Nginx.
+Node.js: Conocimientos básicos de Node.js para entender cómo se conecta el bot a la API de WhatsApp y cómo se gestionan los mensajes entrantes y salientes.
+
+MySQL: Conocimientos básicos de MySQL para comprender cómo se almacenan y recuperan los datos de los clientes en la base de datos.
+
+Ubuntu y Nginx: Familiaridad con el sistema operativo Ubuntu y el servidor web Nginx para administrar y configurar el entorno de alojamiento del bot.
 
 
 ![celexpress](https://github.com/LucasCapiz/ChatBotWhatsapp/assets/103195322/087e337e-d8e4-4838-877c-efd442e644c2)
